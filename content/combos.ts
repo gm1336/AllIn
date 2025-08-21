@@ -1,0 +1,116 @@
+export const JACKPOT = "You Are Early";
+
+export const RAW_COMBOS = `
+Buy The Dip
+Sell The News
+HODL Through Volatility
+Read The Docs
+Trust The Math
+Check The CA
+Copy The CA
+DYOR Before FOMO
+Farm The Airdrop
+Snipe The Mint
+Mint Then List
+Flip Or HODL
+Exit Liquidity Provided
+Add More Liquidity
+LPs Get Rekt
+Degens Never Die
+Devs Do Something
+Rug Pull When
+Team Doxxed When
+Chart Looks Cooked
+Chart Looks Healthy
+Wait For Confirmation
+New ATH Soon
+ATH Then Nuke
+Check Wallet Drainers
+Audit Or Rug
+KOLs Back This
+OGs Back This
+Anon Team Listed
+Based And Green
+Szn Starts Now
+CT Goes Wild
+CT Loves Drama
+Make CT Proud
+Memes Drive Flows
+Memes Then Liquidity
+Liquidity Follows Memes
+All In Vibes
+Send It Bro
+LFG On Sol
+Solana Fees Cheap
+Solana Fast Finality
+TPS So High
+Bridging Is Risky
+DCA Then Chill
+FOMO Then Dump
+Jeets Are Selling
+Whales Accumulating Now
+Whale Games Begin
+Paper Hands Cry
+Diamond Hands Win
+Diamond Hands Only
+Red Candle Party
+Green Candle Party
+Flippening Not Yet
+Onchain Summer Vibes
+Click Confirm Sign
+Gas Cheap Here
+Stablecoins Are Boring
+Leverage Kills Portfolios
+Fees Eat Alpha
+Protect Private Keys
+Cold Wallet Always
+Not Financial Advice
+Floor Price Rising
+Floor Just Swept
+Roadmap Comes Later
+Shipping Over Roadmaps
+Test In Prod
+Mainnet Or Bust
+CEX Listing Soon
+DEX Volume Up
+Fees Fund Security
+Mint Was Botted
+Bots Got Wrecked
+It Was Premined
+Supply Is Scarce
+Airdrop When Sir
+Ser Stay Calm
+Good Vibes Only
+Markets Reward Patience
+Enter On Retest
+Respect Risk First
+Manage Size First
+Mind The Spread
+Avoid Low Liquidity
+Volume Brings Life
+Follow The Flow
+Strength Gets Bought
+Weakness Gets Sold
+Trend Is Friend
+Fade The Euphoria
+Fade The Hopium
+Stop Loss Matters
+Slippage Eats Gains
+Front Running Real
+Bridge Back Home
+Smart Money Watching
+Copy Trading Dangerous
+Bots Everywhere Always
+Spoofers Get Banned
+OGs Were Early
+WAGMI Stay Humble
+NGMI Cope Hard
+CT Never Sleeps
+Airdrop Farmers Unite
+`;
+
+export const COMBOS: [string, string, string][] = RAW_COMBOS.trim().split("\n").map(l => {
+  const parts = l.trim().split(/\s+/);
+  if (parts.length !== 3) throw new Error(`Bad combo: ${l}`);
+  return [parts[0], parts[1], parts[2]] as [string, string, string];
+});
