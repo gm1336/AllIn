@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useSlotMachine } from '@/lib/slot';
 import { cn } from '@/lib/utils';
-import { PreSaleModal } from '@/src/components/PreSaleModal';
+import PreSaleModal from '@/src/components/PreSaleModal';
 
 interface SlotMachineProps {
   seed?: number;
