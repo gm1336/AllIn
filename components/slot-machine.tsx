@@ -4,7 +4,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useSlotMachine } from '@/lib/slot';
 import { cn } from '@/lib/utils';
-import { Copy, X } from 'lucide-react';
 import { PreSaleModal } from '@/src/components/PreSaleModal';
 
 interface SlotMachineProps {
@@ -119,112 +118,8 @@ const SpinButton = ({
   );
 };
 
-const JackpotModal = ({
-  isOpen,
-  onClose,
-  jackpotUnlocked,
-  onOpenPreSale
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  jackpotUnlocked: boolean;
-  onOpenPreSale: () => void;
-}) => {
-  const [copied, setCopied] = useState(false);
-  const contractAddress = 'ALLLzDbTFq8VXYwG4awsXGtv7DKU4YNHUqkJmDS39zMa';
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(contractAddress);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') onClose();
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div
-      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-      onKeyDown={handleKeyDown}
-      tabIndex={-1}
-    >
-      <motion.div
-        className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-8 max-w-md w-full border-2 border-yellow-500 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.8, opacity: 0 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      >
-        <div className="text-center mb-6">
-          <h2 className="text-4xl font-black text-transparent bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text mb-2">
-            You Are Early
-          </h2>
-          <p className="text-gray-300 text-lg">ALLIN token contract address</p>
-        </div>
-
-        <div className="bg-gray-900 rounded-lg p-4 mb-6 border border-gray-700">
-          <div className="flex items-center justify-between">
-            <code className="text-yellow-400 text-sm font-mono break-all mr-2">{contractAddress}</code>
-            <button
-              onClick={handleCopy}
-              className="flex-shrink-0 p-2 bg-yellow-600 hover:bg-yellow-500 text-black rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              aria-label="Copy contract address"
-            >
-              <Copy size={16} />
-            </button>
-          </div>
-          {copied && <p className="text-green-400 text-sm mt-2">Copied to clipboard!</p>}
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex gap-3">
-            <button
-              onClick={handleCopy}
-              className="flex-1 bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            >
-              Copy
-            </button>
-            <button
-              onClick={onClose}
-              className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
-            >
-              Close
-            </button>
-          </div>
-
-          {/* Launch CTA (visible when jackpot is unlocked) */}
-          {jackpotUnlocked && (
-            <button
-              onClick={onOpenPreSale}
-              className="w-full font-bold py-3 px-6 rounded-xl bg-green-600 hover:bg-green-500 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-green-400"
-            >
-              Join Launch
-            </button>
-          )}
-        </div>
-
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-lg p-1"
-          aria-label="Close modal"
-        >
-          <X size={20} />
-        </button>
-      </motion.div>
-    </div>
-  );
-};
-
 const PreSaleCTA = ({ onOpenPreSale, jackpotUnlocked }: { onOpenPreSale: () => void; jackpotUnlocked: boolean }) => {
+  // Если хочешь показывать кнопку всегда — просто удали проверку ниже
   if (!jackpotUnlocked) return null;
 
   return (
@@ -278,27 +173,26 @@ const JackpotEffects = ({ isActive }: { isActive: boolean }) => {
 };
 
 export const SlotMachine = ({ seed, durationsMs, gapMs, className }: SlotMachineProps) => {
-  const [showJackpotModal, setShowJackpotModal] = useState(false);
+  const [showLaunchModal, setShowLaunchModal] = useState(false);
   const [showJackpotEffects, setShowJackpotEffects] = useState(false);
-  const [showPreSaleModal, setShowPreSaleModal] = useState(false);
 
   const { state, spin, canSpin } = useSlotMachine({
     seed,
     durationsMs: durationsMs || [750, 900, 1050],
     gapMs: gapMs || 180,
-    onSpinStart: () => console.log('Spin started'),
-    onReelStop: (index, word) => console.log(`Reel ${index} stopped on: ${word}`),
+    onSpinStart: () => {},
+    onReelStop: () => {},
     onSpinEnd: (result) => {
-      console.log('Spin ended:', result);
       if (result.isJackpot) {
         setShowJackpotEffects(true);
+        // Показали салют — и сразу открываем модалку Launch
         setTimeout(() => {
           setShowJackpotEffects(false);
-          setShowJackpotModal(true);
-        }, 2000);
+          setShowLaunchModal(true);
+        }, 1500);
       }
     },
-    onJackpot: () => console.log('JACKPOT!')
+    onJackpot: () => {}
   });
 
   const handleSpin = () => {
@@ -366,19 +260,11 @@ export const SlotMachine = ({ seed, durationsMs, gapMs, className }: SlotMachine
 
       <JackpotEffects isActive={showJackpotEffects} />
 
-      <JackpotModal
-        isOpen={showJackpotModal}
-        onClose={() => setShowJackpotModal(false)}
-        jackpotUnlocked={state.jackpotUnlocked}
-        onOpenPreSale={() => {
-          setShowJackpotModal(false);
-          setShowPreSaleModal(true);
-        }}
-      />
+      {/* Единственная модалка — Launch (Raydium) */}
+      <PreSaleModal isOpen={showLaunchModal} onClose={() => setShowLaunchModal(false)} />
 
-      <PreSaleModal isOpen={showPreSaleModal} onClose={() => setShowPreSaleModal(false)} />
-
-      <PreSaleCTA onOpenPreSale={() => setShowPreSaleModal(true)} jackpotUnlocked={state.jackpotUnlocked} />
+      {/* CTA. Если нужно всегда показывать — убери проверку в компоненте */}
+      <PreSaleCTA onOpenPreSale={() => setShowLaunchModal(true)} jackpotUnlocked={state.jackpotUnlocked} />
     </>
   );
 };
