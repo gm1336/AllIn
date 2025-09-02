@@ -2,8 +2,10 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import type { KeyboardEvent } from 'react';
 import { useSlotMachine } from '@/lib/slot';
 import { cn } from '@/lib/utils';
+// ✅ правильный путь и default-импорт
 import PreSaleModal from '@/src/components/PreSaleModal';
 
 interface SlotMachineProps {
@@ -19,6 +21,10 @@ interface ReelProps {
   delay: number;
   isCenter?: boolean;
 }
+
+// ✅ ссылка на Raydium Launchpad (можешь заменить на актуальную)
+const RAYDIUM_LAUNCH_URL =
+  'https://raydium.io/launchpad/token/?mint=DQfjXwqstaEsbyx5Mh7ZH7f9MUpyyYLDAxKznyRcbonk';
 
 const Reel = ({ word, isSpinning, delay, isCenter }: ReelProps) => {
   const shouldReduceMotion = useReducedMotion();
@@ -119,7 +125,7 @@ const SpinButton = ({
 };
 
 const PreSaleCTA = ({ onOpenPreSale, jackpotUnlocked }: { onOpenPreSale: () => void; jackpotUnlocked: boolean }) => {
-  // Если хочешь показывать кнопку всегда — просто удали проверку ниже
+  // Если хочешь показывать кнопку всегда — убери проверку ниже
   if (!jackpotUnlocked) return null;
 
   return (
@@ -199,7 +205,7 @@ export const SlotMachine = ({ seed, durationsMs, gapMs, className }: SlotMachine
     if (canSpin()) spin();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if ((e.key === 'Enter' || e.key === ' ') && canSpin()) {
       e.preventDefault();
       handleSpin();
@@ -260,8 +266,12 @@ export const SlotMachine = ({ seed, durationsMs, gapMs, className }: SlotMachine
 
       <JackpotEffects isActive={showJackpotEffects} />
 
-      {/* Единственная модалка — Launch (Raydium) */}
-      <PreSaleModal isOpen={showLaunchModal} onClose={() => setShowLaunchModal(false)} />
+      {/* ✅ Единственная модалка — Launch (Raydium) */}
+      <PreSaleModal
+        isOpen={showLaunchModal}
+        onClose={() => setShowLaunchModal(false)}
+        launchUrl={RAYDIUM_LAUNCH_URL}
+      />
 
       {/* CTA. Если нужно всегда показывать — убери проверку в компоненте */}
       <PreSaleCTA onOpenPreSale={() => setShowLaunchModal(true)} jackpotUnlocked={state.jackpotUnlocked} />
