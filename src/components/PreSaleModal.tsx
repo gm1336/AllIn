@@ -3,20 +3,32 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, ExternalLink, X } from 'lucide-react';
-import { PRESALE_WALLET, PRESALE_MIN_SOL, PRESALE_MAX_SOL, EXPLORER_BASE, PRESALE_PAUSED } from '@/src/constants/presale';
-import { shorten, copyToClipboard } from '@/src/lib/ui';
 
 interface PreSaleModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+/**
+ * Настрой здесь ссылку на Raydium Launchpad через .env,
+ * либо используй дефолт ниже.
+ *
+ * NEXT_PUBLIC_LAUNCH_URL=https://raydium.io/launchpad/token/?mint=...
+ * NEXT_PUBLIC_LAUNCH_STATUS=live | soon
+ */
+const LAUNCH_URL =
+  process.env.NEXT_PUBLIC_LAUNCH_URL ??
+  'https://raydium.io/launchpad/token/?mint=DQfjXwqstaEsbyx5Mh7ZH7f9MUpyyYLDAxKznyRcbonk';
+
+const LAUNCH_STATUS = (process.env.NEXT_PUBLIC_LAUNCH_STATUS ?? 'soon').toLowerCase();
+const LAUNCH_LIVE = LAUNCH_STATUS === 'live';
+
 export const PreSaleModal = ({ isOpen, onClose }: PreSaleModalProps) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await copyToClipboard(PRESALE_WALLET);
+      await navigator.clipboard.writeText(LAUNCH_URL);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -25,15 +37,13 @@ export const PreSaleModal = ({ isOpen, onClose }: PreSaleModalProps) => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      onClose();
-    }
+    if (e.key === 'Escape') onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       onClick={onClose}
       onKeyDown={handleKeyDown}
@@ -45,22 +55,23 @@ export const PreSaleModal = ({ isOpen, onClose }: PreSaleModalProps) => {
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <h2 className="text-3xl font-black text-transparent bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text">
-              Pre-Sale
+              ALL-IN Launch
             </h2>
-            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-              PRESALE_PAUSED 
-                ? 'bg-gray-600 text-gray-300' 
-                : 'bg-green-600 text-green-100'
-            }`}>
-              {PRESALE_PAUSED ? 'PAUSED' : 'LIVE'}
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-bold ${
+                LAUNCH_LIVE ? 'bg-green-600 text-green-100' : 'bg-gray-600 text-gray-300'
+              }`}
+            >
+              {LAUNCH_LIVE ? 'LIVE' : 'SOON'}
             </span>
           </div>
+
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-lg p-1"
@@ -72,65 +83,58 @@ export const PreSaleModal = ({ isOpen, onClose }: PreSaleModalProps) => {
 
         {/* Body */}
         <div className="space-y-6">
-          {/* Instruction */}
           <p className="text-gray-400 text-sm leading-relaxed">
-            Send SOL to our funding wallet from your own wallet. Min {PRESALE_MIN_SOL}, max {PRESALE_MAX_SOL} SOL per wallet.
+            We’re launching on <span className="text-white font-semibold">Raydium Launchpad</span>. Open the launch
+            page, add it to bookmarks and be ready when it goes live.
           </p>
 
-          {/* Funding Wallet Card */}
+          {/* Launch URL Card */}
           <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
-            <label className="block text-gray-300 text-sm font-medium mb-3">
-              Funding Wallet
-            </label>
+            <label className="block text-gray-300 text-sm font-medium mb-3">Launchpad URL</label>
+
             <div className="flex items-center gap-2">
-              <code className="flex-1 text-yellow-400 text-sm font-mono bg-gray-800 px-3 py-2 rounded border border-gray-600">
-                {shorten(PRESALE_WALLET)}
+              <code className="flex-1 text-yellow-400 text-sm font-mono bg-gray-800 px-3 py-2 rounded border border-gray-600 break-all">
+                {LAUNCH_URL}
               </code>
+
               <button
                 onClick={handleCopy}
                 className="flex-shrink-0 p-2 bg-yellow-600 hover:bg-yellow-500 text-black rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                aria-label="Copy wallet address"
+                aria-label="Copy URL"
               >
                 <Copy size={16} />
               </button>
+
               <a
-                href={`${EXPLORER_BASE}${PRESALE_WALLET}`}
+                href={LAUNCH_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="flex-shrink-0 p-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
-                aria-label="View on explorer"
+                aria-label="Open Raydium"
               >
                 <ExternalLink size={16} />
               </a>
             </div>
-            {copied && (
-              <p className="text-green-400 text-sm mt-2">Copied to clipboard!</p>
-            )}
+
+            {copied && <p className="text-green-400 text-sm mt-2">Link copied!</p>}
           </div>
 
-          {/* Disclaimer */}
           <p className="text-gray-500 text-xs leading-relaxed">
-            No guarantees. Experimental token. Don't send from CEX. DYOR.
+            No guarantees. Experimental token. Don’t ape more than you can afford to lose. DYOR.
           </p>
-
-          {/* Paused Notice */}
-          {PRESALE_PAUSED && (
-            <div className="bg-gray-800 border border-gray-600 rounded-lg p-3">
-              <p className="text-gray-400 text-sm">
-                The pre-sale is currently paused. Check back later.
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Footer */}
         <div className="mt-8">
-          <button
-            onClick={onClose}
-            className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
+          <a
+            href={LAUNCH_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="w-full inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-green-400"
           >
-            Close
-          </button>
+            <ExternalLink size={18} />
+            Join Launch on Raydium
+          </a>
         </div>
       </motion.div>
     </div>
