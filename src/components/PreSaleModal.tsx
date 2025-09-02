@@ -1,86 +1,90 @@
-import React from "react";
+'use client';
+
+import { motion } from 'framer-motion';
+import { X, Copy } from 'lucide-react';
+import { useState } from 'react';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  /** Полная ссылка на страницу лаунчпада Raydium */
-  raydiumUrl: string;
+  /** URL Raydium Launchpad. Если не передан — возьмём из переменной окружения. */
+  launchUrl?: string;
 };
 
-const copyToClipboard = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    // fallback
-    const el = document.createElement("textarea");
-    el.value = text;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand("copy");
-    document.body.removeChild(el);
-  }
-};
+const FALLBACK_URL = process.env.NEXT_PUBLIC_RAYDIUM_URL ?? '';
 
-export default function PreSaleModal({ isOpen, onClose, raydiumUrl }: Props) {
+export default function PreSaleModal({ isOpen, onClose, launchUrl }: Props) {
   if (!isOpen) return null;
 
+  const url = launchUrl || FALLBACK_URL;
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {}
+  };
+
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div className="w-full max-w-xl rounded-2xl border border-white/10 bg-[#0C0F14] p-6 shadow-2xl">
-        {/* header */}
-        <div className="mb-4 flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-3xl font-black text-transparent bg-gradient-to-r from-yellow-400 to-lime-400 bg-clip-text">
-              ALL-IN Launch
-            </h2>
-            <p className="mt-1 text-sm text-gray-400">We’re launching on Raydium Launchpad.</p>
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <motion.div
+        className="relative z-10 w-[92%] max-w-xl rounded-2xl border border-gray-700 bg-gray-900/95 p-6 shadow-2xl"
+        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.18 }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="ALL-IN Launch"
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-2xl font-black text-transparent bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text">
+            ALL-IN Launch
+          </h3>
           <button
             onClick={onClose}
-            className="rounded-lg bg-white/5 px-3 py-1 text-sm text-gray-200 hover:bg-white/10"
+            className="rounded-md p-2 text-gray-300 hover:bg-gray-800 hover:text-white"
+            aria-label="Close"
           >
-            Close
+            <X size={18} />
           </button>
         </div>
 
-        {/* URL box */}
-        <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-400">
-            Launchpad URL
-          </label>
-          <div className="flex items-center gap-2">
-            <input
-              readOnly
-              value={raydiumUrl}
-              className="w-full rounded-lg bg-black/40 px-3 py-2 text-sm text-gray-200 outline-none"
-            />
-            <button
-              onClick={() => copyToClipboard(raydiumUrl)}
-              title="Copy URL"
-              className="rounded-lg bg-white/10 px-3 py-2 text-sm text-gray-200 hover:bg-white/20"
-            >
-              Copy
-            </button>
-          </div>
-        </div>
-
-        <p className="mt-3 text-xs leading-relaxed text-gray-500">
-          No guarantees. Experimental token. Don’t ape more than you can afford to lose. DYOR.
+        <p className="mb-3 text-sm text-gray-300">
+          We’re launching on <span className="font-semibold text-white">Raydium Launchpad</span>. 
+          Open the page, bookmark it and be ready when it goes live.
         </p>
 
+        <div className="mb-4 flex items-center rounded-xl border border-gray-700 bg-gray-800/60 p-3">
+          <input
+            readOnly
+            value={url}
+            className="w-full bg-transparent text-sm text-gray-100 outline-none"
+          />
+          <button
+            onClick={handleCopy}
+            className="ml-2 inline-flex items-center gap-1 rounded-md bg-gray-700 px-2 py-1 text-xs text-white hover:bg-gray-600"
+          >
+            <Copy size={14} />
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+        </div>
+
         <a
-          href={raydiumUrl}
+          href={url || '#'}
           target="_blank"
-          rel="noreferrer"
-          className="mt-5 block w-full rounded-xl bg-emerald-500 px-4 py-3 text-center text-base font-semibold text-black hover:bg-emerald-400"
+          rel="noopener noreferrer"
+          className="mt-1 inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white hover:bg-emerald-500"
         >
           Join Launch on Raydium
         </a>
-      </div>
+
+        <p className="mt-3 text-center text-xs text-gray-400">
+          No guarantees. Experimental token. Don’t ape more than you can afford to lose. DYOR.
+        </p>
+      </motion.div>
     </div>
   );
 }
