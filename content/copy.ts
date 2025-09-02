@@ -1,7 +1,7 @@
 export const copy = {
   header: {
     brand: "ALLIN",
-    socialLink: "https://x.com/all_in_xyz "
+    socialLink: "https://x.com/all_in_xyz"
   },
   hero: {
     headline: "Spin Your Way to Fortune",
