@@ -7,7 +7,7 @@ import { useState } from 'react';
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  /** URL Raydium Launchpad. Если не передан — возьмём из переменной окружения. */
+  /** URL Raydium Launchpad. Если не передан — берём из переменной окружения */
   launchUrl?: string;
 };
 
@@ -24,31 +24,23 @@ export default function PreSaleModal({ isOpen, onClose, launchUrl }: Props) {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
-    } catch {
-      /* no-op */
-    }
+    } catch {}
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center"
-      aria-modal="true"
-      role="dialog"
-      aria-label="ALL-IN Launch"
-    >
-      {/* затемнение фона */}
-      <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden="true"
-      />
+    <div className="fixed inset-0 z-[200] flex items-center justify-center">
+      {/* тёмный бэкдроп */}
+      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
 
-      {/* карточка модалки — ПОЛНОСТЬЮ НЕПРОЗРАЧНАЯ */}
+      {/* сама модалка — фон ПОЛНОСТЬЮ непрозрачный */}
       <motion.div
-        className="relative z-[100000] w-[92%] max-w-lg rounded-2xl border border-white/10 bg-[#0B0F19] p-6 shadow-2xl"
+        className="relative z-[210] w-[92%] max-w-xl rounded-2xl border border-gray-700 bg-gray-900 p-6 shadow-2xl"
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.18 }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="ALL-IN Launch"
       >
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-2xl font-black text-transparent bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text">
@@ -64,11 +56,11 @@ export default function PreSaleModal({ isOpen, onClose, launchUrl }: Props) {
         </div>
 
         <p className="mb-3 text-sm text-gray-300">
-          We’re launching on <span className="font-semibold text-white">Raydium Launchpad</span>.
-          Open the page, bookmark it and be ready when it goes live.
+          We’re launching on <span className="font-semibold text-white">Raydium Launchpad</span>. Open the page,
+          bookmark it and be ready when it goes live.
         </p>
 
-        <div className="mb-4 flex items-center rounded-xl border border-white/10 bg-[#121826] p-3">
+        <div className="mb-4 flex items-center rounded-xl border border-gray-700 bg-gray-800 p-3">
           <input
             readOnly
             value={url}
