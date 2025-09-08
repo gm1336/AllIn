@@ -24,7 +24,7 @@ interface ReelProps {
 
 // ✅ ссылка на Raydium Launchpad (можешь заменить на актуальную)
 const RAYDIUM_LAUNCH_URL =
-  'https://raydium.io/launchpad/token/?mint=DQfjXwqstaEsbyx5Mh7ZH7f9MUpyyYLDAxKznyRcbonk';
+  'https://raydium.io/launchpad/token/?mint=2BYVnsTENrMw2iYRyXF9Nczme7PzbjdbSbqa1YSDFray&fromCreate=true';
 
 const Reel = ({ word, isSpinning, delay, isCenter }: ReelProps) => {
   const shouldReduceMotion = useReducedMotion();
