@@ -21,7 +21,7 @@ interface ReelProps {
   isCenter?: boolean;
 }
 
-// Актуальная ссылка на Raydium Launchpad
+// актуальная ссылка на Raydium Launchpad
 const RAYDIUM_LAUNCH_URL =
   'https://raydium.io/launchpad/token/?mint=2BYVnsTENrMw2iYRyXF9Nczme7PzbjdbSbqa1YSDFray&fromCreate=true';
 
@@ -38,17 +38,15 @@ const Reel = ({ word, isSpinning, delay, isCenter }: ReelProps) => {
 
   return (
     <div className="relative flex-1 h-16 sm:h-20 md:h-24 overflow-hidden">
-      {/* Outer Bezel */}
-      <div className="absolute inset-0 rounded-xl border-2 border-yellow-400 bg-gradient-to-b from-yellow-600 via-yellow-500 to-yellow-700 shadow-2xl">
-        {/* Inner Window */}
-        <div className="absolute inset-2 rounded-lg overflow-hidden bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
-          <div className="absolute inset-0 rounded-lg shadow-[inset_0_6px_12px_rgba(0,0,0,0.6)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-yellow-600 via-yellow-500 to-yellow-700 rounded-xl shadow-2xl border-2 border-yellow-400">
+        <div className="absolute inset-2 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 rounded-lg overflow-hidden">
+          <div className="absolute inset-0 shadow-[inset_0_6px_12px_rgba(0,0,0,0.6)] rounded-lg" />
           <div className="absolute inset-0 bg-gradient-to-b from-gray-700 via-gray-600 to-gray-700" />
-          <div className="relative z-10 flex h-full items-center justify-center">
+          <div className="relative h-full flex items-center justify-center z-10">
             <motion.div
               className={cn(
-                'px-2 text-center font-bold text-yellow-300',
-                'text-sm sm:text-lg md:text-xl lg:text-2xl drop-shadow-[0_3px_6px_rgba(0,0,0,0.9)]',
+                'text-sm sm:text-lg md:text-xl lg:text-2xl font-bold text-yellow-300 text-center px-2',
+                'drop-shadow-[0_3px_6px_rgba(0,0,0,0.9)]',
                 isCenter && !shouldReduceMotion && 'filter drop-shadow-[0_0_12px_rgba(255,215,0,0.8)]'
               )}
               style={{ willChange: 'transform' }}
@@ -61,14 +59,13 @@ const Reel = ({ word, isSpinning, delay, isCenter }: ReelProps) => {
               {isSpinning ? '???' : displayWord}
             </motion.div>
           </div>
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-lg bg-gradient-to-b from-white/15 via-white/8 to-transparent" />
-          <div className="pointer-events-none absolute inset-0 rounded-lg bg-gradient-to-b from-black/20 via-transparent to-black/20" />
+          <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 via-white/8 to-transparent rounded-t-lg pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20 rounded-lg pointer-events-none" />
         </div>
       </div>
 
-      {/* Center Row Glow */}
       {isCenter && !isSpinning && (
-        <div className="pointer-events-none absolute inset-0 animate-pulse rounded-xl bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent rounded-xl pointer-events-none animate-pulse" />
       )}
     </div>
   );
@@ -77,7 +74,7 @@ const Reel = ({ word, isSpinning, delay, isCenter }: ReelProps) => {
 const SpinButton = ({
   onSpin,
   isDisabled,
-  isSpinning,
+  isSpinning
 }: {
   onSpin: () => void;
   isDisabled: boolean;
@@ -88,8 +85,9 @@ const SpinButton = ({
   return (
     <motion.button
       className={cn(
-        'rounded-full border-2 border-yellow-300 bg-gradient-to-b from-[#F5C451] via-[#E3A92C] to-[#D4941A] px-8 py-4 text-xl font-black text-black shadow-xl',
-        'relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-gray-900',
+        'px-8 py-4 bg-gradient-to-b from-[#F5C451] via-[#E3A92C] to-[#D4941A] text-black font-black text-xl rounded-full shadow-xl',
+        'border-2 border-yellow-300 relative overflow-hidden',
+        'focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-gray-900',
         isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:shadow-2xl hover:shadow-yellow-500/30'
       )}
       onClick={onSpin}
@@ -106,23 +104,15 @@ const SpinButton = ({
       aria-label="Spin"
       tabIndex={0}
     >
-      <div className="absolute inset-x-0 top-0 h-1/2 rounded-t-full bg-gradient-to-b from-white/40 via-white/20 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-1/2 rounded-b-full bg-gradient-to-t from-black/30 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/40 via-white/20 to-transparent rounded-t-full" />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/30 to-transparent rounded-b-full" />
       <span className="relative z-10 drop-shadow-sm">{isSpinning ? 'Spinning...' : 'SPIN'}</span>
     </motion.button>
   );
 };
 
-const PreSaleCTA = ({
-  onOpenPreSale,
-  jackpotUnlocked,
-}: {
-  onOpenPreSale: () => void;
-  jackpotUnlocked: boolean;
-}) => {
-  // Показываем CTA только после «джекпота»
+const PreSaleCTA = ({ onOpenPreSale, jackpotUnlocked }: { onOpenPreSale: () => void; jackpotUnlocked: boolean }) => {
   if (!jackpotUnlocked) return null;
-
   return (
     <motion.div
       className="mt-8 text-center"
@@ -132,7 +122,7 @@ const PreSaleCTA = ({
     >
       <button
         onClick={onOpenPreSale}
-        className="rounded-full bg-gradient-to-r from-green-600 to-green-700 px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-200 hover:from-green-500 hover:to-green-600 hover:shadow-xl hover:shadow-green-500/30 focus:outline-none focus:ring-4 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-gray-900"
+        className="px-8 py-4 font-bold text-lg rounded-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white shadow-lg hover:shadow-xl hover:shadow-green-500/30 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-green-400 transition-all duration-200"
       >
         Join Launch
       </button>
@@ -147,24 +137,19 @@ const JackpotEffects = ({ isActive }: { isActive: boolean }) => {
   return (
     <>
       <motion.div
-        className="fixed inset-0 z-40 pointer-events-none bg-yellow-400/20"
+        className="fixed inset-0 bg-yellow-400/20 pointer-events-none z-40"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 1, 0] }}
         transition={{ duration: 2, ease: 'easeInOut' }}
       />
-      <div className="fixed inset-0 z-40 pointer-events-none">
+      <div className="fixed inset-0 pointer-events-none z-40">
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute h-3 w-3 rounded-full bg-yellow-400"
+            className="absolute w-3 h-3 bg-yellow-400 rounded-full"
             style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
             initial={{ scale: 0, rotate: 0 }}
-            animate={{
-              scale: [0, 1, 0],
-              rotate: [0, 360],
-              y: [0, -100, 100],
-              x: [0, Math.random() * 200 - 100],
-            }}
+            animate={{ scale: [0, 1, 0], rotate: [0, 360], y: [0, -100, 100], x: [0, Math.random() * 200 - 100] }}
             transition={{ duration: 2, delay: Math.random() * 0.5, ease: 'easeOut' }}
           />
         ))}
@@ -192,7 +177,7 @@ export const SlotMachine = ({ seed, durationsMs, gapMs, className }: SlotMachine
         }, 1500);
       }
     },
-    onJackpot: () => {},
+    onJackpot: () => {}
   });
 
   const handleSpin = () => {
@@ -209,20 +194,19 @@ export const SlotMachine = ({ seed, durationsMs, gapMs, className }: SlotMachine
   return (
     <>
       <div
-        className={cn('mx-auto w-full max-w-5xl', className)}
+        className={cn('w-full max-w-5xl mx-auto', className)}
         tabIndex={0}
         onKeyDown={handleKeyDown}
         role="application"
         aria-label="Slot machine - Press Space or Enter to spin"
       >
         <div className="relative">
-          <div className="relative rounded-3xl border-4 border-yellow-600/60 bg-gradient-to-b from-gray-700 via-gray-800 to-gray-900 p-6 shadow-2xl md:p-10">
-            <div className="absolute -top-6 left-1/2 h-12 w-40 -translate-x-1/2 transform rounded-full border-4 border-yellow-300 bg-gradient-to-b from-yellow-400 via-yellow-500 to-yellow-600 shadow-xl">
-              <div className="absolute inset-x-0 top-0 h-1/2 rounded-t-full bg-gradient-to-b from-white/30 to-transparent" />
+          <div className="bg-gradient-to-b from-gray-700 via-gray-800 to-gray-900 rounded-3xl p-6 md:p-10 shadow-2xl border-4 border-yellow-600/60 relative overflow-hidden">
+            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-40 h-12 bg-gradient-to-b from-yellow-400 via-yellow-500 to-yellow-600 rounded-full shadow-xl border-3 border-yellow-300">
+              <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent rounded-t-full" />
             </div>
 
-            {/* Reels */}
-            <div className="mx-auto mb-8 flex max-w-2xl space-x-2 md:space-x-4">
+            <div className="flex space-x-2 md:space-x-4 mb-8 max-w-2xl mx-auto">
               {state.reels.map((word, index) => (
                 <Reel
                   key={index}
@@ -234,40 +218,37 @@ export const SlotMachine = ({ seed, durationsMs, gapMs, className }: SlotMachine
               ))}
             </div>
 
-            {/* Spin Button */}
-            <div className="mb-6 flex justify-center">
+            <div className="flex justify-center mb-6">
               <SpinButton onSpin={handleSpin} isDisabled={!canSpin()} isSpinning={state.isSpinning} />
             </div>
 
-            {/* Decorative lights */}
             <div className="flex justify-center space-x-6 text-yellow-400">
               {[...Array(7)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="h-4 w-4 rounded-full border border-yellow-300 bg-gradient-to-b from-yellow-400 to-yellow-600 shadow-lg"
+                  className="w-4 h-4 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-full shadow-lg border border-yellow-300"
                   animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.1, 0.8] }}
                   transition={{ duration: 2.5, delay: i * 0.3, repeat: Infinity, ease: 'easeInOut' }}
                 />
               ))}
             </div>
 
-            <div className="pointer-events-none absolute inset-4 rounded-2xl bg-gradient-to-b from-yellow-500/10 via-transparent to-yellow-500/10" />
+            <div className="absolute inset-4 bg-gradient-to-b from-yellow-500/10 via-transparent to-yellow-500/10 rounded-2xl pointer-events-none" />
           </div>
 
-          <div className="absolute -bottom-6 left-6 right-6 h-12 rounded-full bg-black/30 blur-xl" />
+          <div className="absolute -bottom-6 left-6 right-6 h-12 bg-black/30 rounded-full blur-xl" />
         </div>
       </div>
 
       <JackpotEffects isActive={showJackpotEffects} />
 
-      {/* Единственная модалка — Launch (Raydium) */}
+      {/* единственная модалка — Launch (Raydium) */}
       <PreSaleModal
         isOpen={showLaunchModal}
         onClose={() => setShowLaunchModal(false)}
         launchUrl={RAYDIUM_LAUNCH_URL}
       />
 
-      {/* CTA (показывается после «джекпота») */}
       <PreSaleCTA onOpenPreSale={() => setShowLaunchModal(true)} jackpotUnlocked={state.jackpotUnlocked} />
     </>
   );
