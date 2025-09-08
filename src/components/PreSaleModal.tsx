@@ -7,7 +7,8 @@ import { useState } from 'react';
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  launchUrl?: string; // Raydium URL (можно прокинуть пропом или из ENV)
+  /** Raydium Launchpad URL (можно прокинуть пропом или через ENV) */
+  launchUrl?: string;
 };
 
 const FALLBACK_URL = process.env.NEXT_PUBLIC_RAYDIUM_URL ?? '';
@@ -28,7 +29,7 @@ export default function PreSaleModal({ isOpen, onClose, launchUrl }: Props) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center">
-      {/* затемнение фона; окно само ОПАКОВОЕ */}
+      {/* затемнение фона */}
       <div className="absolute inset-0 bg-black/80" onClick={onClose} />
 
       <motion.div
@@ -40,54 +41,67 @@ export default function PreSaleModal({ isOpen, onClose, launchUrl }: Props) {
         aria-modal="true"
         aria-label="ALL-IN Launch"
       >
-        {/* градиентная рамка */}
-        <div className="rounded-3xl p-[1px] bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 shadow-[0_0_40px_rgba(234,179,8,0.15)]">
-          {/* ПОЛНОСТЬЮ НЕПРОЗРАЧНЫЙ фон модалки */}
-          <div className="rounded-3xl bg-[#0B0F13] p-6">
+        {/* тонкая «золотая» окантовка */}
+        <div className="rounded-[22px] p-[1px] bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 shadow-[0_0_26px_rgba(245,158,11,0.35)]">
+          {/* ПОЛНОСТЬЮ НЕПРОЗРАЧНЫЙ ЖЁЛТЫЙ ФОН */}
+          <div className="rounded-[22px] p-6 bg-gradient-to-b from-[#F8D74A] via-[#F4C744] to-[#E5A92E] text-slate-900">
+            {/* заголовок */}
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-2xl font-black text-transparent bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text">
-                ALL-IN Launch
+              <h3 className="text-2xl font-black tracking-wide">
+                <span className="bg-gradient-to-r from-yellow-800 to-yellow-600 bg-clip-text text-transparent drop-shadow-[0_1px_0_rgba(0,0,0,0.2)]">
+                  ALL-IN Launch
+                </span>
               </h3>
               <button
                 onClick={onClose}
-                className="rounded-md p-2 text-gray-300 hover:bg-gray-800 hover:text-white"
+                className="rounded-md p-2 text-slate-900/80 hover:bg-black/10 hover:text-slate-900"
                 aria-label="Close"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <p className="mb-3 text-sm text-gray-200">
-              We’re launching on <span className="font-semibold text-white">Raydium Launchpad</span>. Open the
-              page, bookmark it and be ready when it goes live.
+            <p className="mb-3 text-sm">
+              We’re launching on <span className="font-semibold">Raydium Launchpad</span>. Open the page,
+              bookmark it and be ready when it goes live.
             </p>
 
-            {/* поле со ссылкой — тоже ОПАКОВОЕ */}
-            <div className="mb-4 flex items-center rounded-xl border border-gray-700 bg-[#111827] p-3">
+            {/* поле со ссылкой (непрозрачное) */}
+            <div className="mb-4 flex items-center rounded-xl border border-amber-600/50 bg-white p-3 shadow-inner">
               <input
                 readOnly
                 value={url}
-                className="w-full bg-transparent text-sm text-gray-100 outline-none"
+                className="w-full bg-transparent text-sm text-slate-900 outline-none"
               />
               <button
                 onClick={handleCopy}
-                className="ml-2 inline-flex items-center gap-1 rounded-md bg-gray-700 px-2 py-1 text-xs text-white hover:bg-gray-600"
+                className="ml-2 inline-flex items-center gap-1 rounded-md bg-amber-600 px-2 py-1 text-xs font-semibold text-black hover:bg-amber-500"
               >
                 <Copy size={14} />
                 {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
 
-            <a
-              href={url || '#'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-1 inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white hover:bg-emerald-500"
-            >
-              Join Launch on Raydium
-            </a>
+            {/* кнопки разных цветов */}
+            <div className="mt-2 grid grid-cols-2 gap-3">
+              <button
+                onClick={onClose}
+                className="rounded-xl bg-slate-900 px-4 py-3 font-semibold text-white hover:bg-slate-800"
+              >
+                Close
+              </button>
 
-            <p className="mt-3 text-center text-xs text-gray-400">
+              <a
+                href={url || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl bg-emerald-600 px-4 py-3 text-center font-semibold text-white hover:bg-emerald-500"
+              >
+                Join Launch on Raydium
+              </a>
+            </div>
+
+            <p className="mt-3 text-center text-xs text-slate-800/80">
               No guarantees. Experimental token. Don’t ape more than you can afford to lose. DYOR.
             </p>
           </div>
