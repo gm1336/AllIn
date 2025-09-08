@@ -21,7 +21,6 @@ interface ReelProps {
   isCenter?: boolean;
 }
 
-// актуальная ссылка на Raydium Launchpad
 const RAYDIUM_LAUNCH_URL =
   'https://raydium.io/launchpad/token/?mint=2BYVnsTENrMw2iYRyXF9Nczme7PzbjdbSbqa1YSDFray&fromCreate=true';
 
@@ -242,7 +241,6 @@ export const SlotMachine = ({ seed, durationsMs, gapMs, className }: SlotMachine
 
       <JackpotEffects isActive={showJackpotEffects} />
 
-      {/* единственная модалка — Launch (Raydium) */}
       <PreSaleModal
         isOpen={showLaunchModal}
         onClose={() => setShowLaunchModal(false)}
