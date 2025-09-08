@@ -7,8 +7,7 @@ import { useState } from 'react';
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  /** Raydium Launchpad URL; если не передан — читаем из ENV */
-  launchUrl?: string;
+  launchUrl?: string; // Raydium URL (можно прокинуть пропом или из ENV)
 };
 
 const FALLBACK_URL = process.env.NEXT_PUBLIC_RAYDIUM_URL ?? '';
@@ -29,10 +28,9 @@ export default function PreSaleModal({ isOpen, onClose, launchUrl }: Props) {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center">
-      {/* чёрный плотный оверлей */}
+      {/* затемнение фона; окно само ОПАКОВОЕ */}
       <div className="absolute inset-0 bg-black/80" onClick={onClose} />
 
-      {/* рамка-градиент + ПОЛНОСТЬЮ непрозрачный бэк */}
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -42,9 +40,10 @@ export default function PreSaleModal({ isOpen, onClose, launchUrl }: Props) {
         aria-modal="true"
         aria-label="ALL-IN Launch"
       >
-        <div className="rounded-3xl p-[1px] bg-gradient-to-r from-yellow-500/60 via-yellow-400/60 to-yellow-500/60 shadow-[0_0_40px_rgba(234,179,8,0.15)]">
+        {/* градиентная рамка */}
+        <div className="rounded-3xl p-[1px] bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 shadow-[0_0_40px_rgba(234,179,8,0.15)]">
+          {/* ПОЛНОСТЬЮ НЕПРОЗРАЧНЫЙ фон модалки */}
           <div className="rounded-3xl bg-[#0B0F13] p-6">
-            {/* header */}
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-2xl font-black text-transparent bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text">
                 ALL-IN Launch
@@ -58,13 +57,12 @@ export default function PreSaleModal({ isOpen, onClose, launchUrl }: Props) {
               </button>
             </div>
 
-            {/* text */}
-            <p className="mb-3 text-sm text-gray-300">
+            <p className="mb-3 text-sm text-gray-200">
               We’re launching on <span className="font-semibold text-white">Raydium Launchpad</span>. Open the
               page, bookmark it and be ready when it goes live.
             </p>
 
-            {/* url box */}
+            {/* поле со ссылкой — тоже ОПАКОВОЕ */}
             <div className="mb-4 flex items-center rounded-xl border border-gray-700 bg-[#111827] p-3">
               <input
                 readOnly
@@ -80,7 +78,6 @@ export default function PreSaleModal({ isOpen, onClose, launchUrl }: Props) {
               </button>
             </div>
 
-            {/* CTA */}
             <a
               href={url || '#'}
               target="_blank"
